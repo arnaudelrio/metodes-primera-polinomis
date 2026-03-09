@@ -4,3 +4,5 @@
 *.o
 */target
 !*Makefile
+*.aux
+*.log
