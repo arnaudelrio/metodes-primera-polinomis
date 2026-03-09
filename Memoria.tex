@@ -1,6 +1,9 @@
 \documentclass[12pt,twoside,a4paper]{article}
 \usepackage{amsmath}
 \usepackage{datetime}
+\usepackage[most]{tcolorbox}
+\newcommand{\bash}[1]{\begin{tcolorbox}\texttt{\$ #1}\end{tcolorbox}}
+\newcommand{\fn}[2]{\begin{tcolorbox}[enhanced,colback=white,colframe=gray!50!white,attach boxed title to top center={yshift=-3mm,yshifttext=-1mm},title={Funció \texttt{#1}},boxed title style={size=small,colframe=black},colbacktitle=white,coltitle=black]\texttt{#2}\end{tcolorbox}}
 
 \title{Memòria Pràctica 1 - Mètodes Numèrics}
 \author{Arnau del Río}
@@ -10,5 +13,123 @@
 \maketitle
 
 \section{Problema}
-Volem
+L'objectiu d'aquesta pràctica és poder treballar amb polinomis de grau elevat de forma àgil.
+
+Les utilitats que desenvoluparem en aquesta pràctica són:
+\begin{itemize}
+    \item \texttt{pcl}: Calcular combinacions lineals de polinomis
+    \item \texttt{pmul}: Multiplicar polinomis
+    \item \texttt{pder}: Derivar polinomis
+    \item \texttt{paval}: Avaluar polinomis
+\end{itemize}
+
+\newpage
+
+\section{Implementació}
+Per poder implementar aquestes utilitats, necessitarem poder guardar polinomis en memòria. Ho farèm a través de guardar un vector de coeficients, des de l'índex 0 (el terme independent) fins al grau del polinomi.
+
+\subsection{Combinació lineal de polinomis}
+El càlcul de una combinació lineal de polinomis consistirà en multiplicar cada coeficient del polinomi per el valor corresponent i sumar els resultats.
+
+\begin{tcolorbox}[
+title=\textbf{Algoritme:} Per calcular una combinació lineal $\alpha p(x) + \beta q(x)$,colback=red!5!white,colframe=red!75!black]
+\begin{enumerate}
+    \item Determinar el grau màxim $n$ entre els dos polinomis
+    \item Per cada coeficient $i$ de 0 fins a $n$:
+    \begin{itemize}
+        \item Primer calculem el valor $r_i = \alpha p_i$
+        \item Aleshores afegim $r_i = r_i + \beta q_i$
+    \end{itemize}
+\end{enumerate}
+\end{tcolorbox}
+
+\subsection{Multiplicació de polinomis}
+La multiplicació de polinomis consistirà en multiplicar cada coeficient del polinomi per el valor corresponent i sumar els resultats.
+
+\begin{tcolorbox}[
+title=\textbf{Algoritme:} Per multiplicar dos polinomis $p(x)$ i $q(x)$,colback=blue!5!white,colframe=blue!75!black]
+Siguin $n$ i $m$ els graus dels polinomis $p(x)$ i $q(x)$, respectivament. Aleshores, calculem:
+
+$$r = \sum_{i = 0}^m \sum_{j = 0}^n p_i q_j x^{i+j}$$
+\end{tcolorbox}
+
+\subsection{Derivació de polinomis}
+\begin{tcolorbox}[
+title=\textbf{Algoritme:} Per derivar un polinomi $p(x)$,colback=green!5!white,colframe=green!75!black]
+Determinar el grau $n$ del polinomi.
+
+Per cada coeficient $i$ de 0 fins a $n-1$:
+
+$$r_i = i \cdot p_i$$
+
+Obtenim un nou polinomi $r(x)$ de grau $n-1$.
+\end{tcolorbox}
+
+\newpage
+
+\section{Manual de software}
+\subsection{Entrada i sortida dels polinomis}
+Si volem passar un polinomi $p(x)$ de grau $n$ per \texttt{stdin}, passarem $n+2$ valors reals, on el primer valor és el grau del polinomi $n$ i els següents $n+1$ valors són els coeficients de $p(x)$.
+
+Per exemple, per passar el polinomi $p(x) = 2x^3 - 3x^2 + x - 5$ a \texttt{pder}, passarem els valors $3$, $-5$, $1$, $-3$, $2$ per \texttt{stdin}:
+
+\bash{echo 3 -5 1 -3 2 | ./pder}
+
+La sortida per \texttt{stdout} tindrà el mateix format que l'entrada, en l'exemple anterior obtindrem la derivada del polinomi, $p'(x) = 6x^2 - 6x + 1$:
+
+\bash{echo 3 -5 1 -3 2 | ./pder\\1 -6 6}
+
+Les funcions \texttt{plleg} i \texttt{pescr} s'encarreguen de la lectura i escritura de polinomis per \texttt{stdin} i \texttt{stdout}, respectivament, i els seus arguments són un fitxer d'entrada o sortida (que pot ser \texttt{stdin} o \texttt{stdout}), un enter $n$ i un polinomi de grau $n$.
+
+\subsection{Utilitat \texttt{pcl}}
+La utilitat \texttt{pcl} es crida passant per \texttt{stdin} els valors de \texttt{alf} i \texttt{bet}, que són els coeficients dels polinomis a operar, i a continuació els polinomis a operar.
+\bash{./pcl alf bet}
+
+Exemple d'ús: si volem calcular $0.1 \cdot p(x) + 0.2 \cdot q(x)$, amb $p(x) = x^2 + x$ i $q(x) = 2x^2 - 3x + 1$, podem fer:
+
+\bash{echo 2 1 0 1 2 -2 -3 1 | ./pcl 0.1 0.2}
+
+\subsection{Funció \texttt{pcl}}
+La funció \texttt{pcl} té el prototipus següent:
+
+\fn{pcl}{void pcl (int m, double *p, int n, double *q, double alf, double bet, double r[]);}
+
+\subsection{Utilitat \texttt{pmult}}
+La utilitat \texttt{pmult} simplement multiplica dos polinomis passats per \texttt{stdin}.
+\bash{./pmult p q}
+
+Per exemple, per multiplicar els polinomis $p(x) = -1 + x$ i $q(x) = -2 + x$ amb resultat $r(x) = 2 - 3x + x^2$, podem fer:
+\bash{echo 1 -1 1 1 -2 1 | ./pmult\\2 2 -3 1}
+
+\subsection{Funció \texttt{pmult}}
+
+\subsection{Utilitat \texttt{pder}}
+La utilitat \texttt{pder} només reb un polinomi per \texttt{stdin} i escriu la seva derivada per \texttt{stdout}.
+\bash{./pder p}
+
+Per exemple, per derivar el polinomi $p(x) = 1 - 5x + 3x^2$ amb resultat $p'(x) = -5 + 6x$, podem fer:
+\bash{echo 1 -5 3 | ./pder\\-5 6}
+
+\subsection{Funció \texttt{pder}}
+
+\subsection{Utilitat \texttt{paval}}
+La utilitat \texttt{paval} evalua un polinomi passat per \texttt{stdin} en un conjunt de valors donats per \texttt{stdin} (sense necessitat de explicitar el nombre de valors).
+\bash{./paval p x1 x2 ... xm }
+
+Per exemple, per avaluar el polinomi $p(x) = -1 + x + x^2$ en els punts $x = 0.1, 0.2, 0.3$, podem fer:
+
+\bash{echo 2 -1 1 1 0.1 0.2 0.3 | ./paval\\0.1 -0.89\\0.2 -0.76\\0.3 -0.61}
+
+\subsection{Funció \texttt{paval}}
+
+\newpage
+
+\section{Validació del software}
+Podem comprovar que
+
+\newpage
+
+\section{Resultats}
+\subsection{gnuplot}
+
 \end{document}
