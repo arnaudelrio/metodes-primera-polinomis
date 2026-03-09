@@ -1,0 +1,6 @@
+services:
+  latex:
+     image: cristiangreco/pdflatex:latest
+     volumes:
+       - .:/sources
+     command: pdflatex Memoria.tex
