@@ -5,4 +5,4 @@ services:
      volumes:
        - .:/sources
      working_dir: /sources
-     command: sh -c "make realclean && make paval && chmod +x /sources/paval && echo '' | pdflatex --shell-escape -interaction=batchmode Memoria.tex && rm paval Memoria-* Memoria.gnuploterrors *.aux *.log && make realclean"
+     command: sh -c "make realclean && make paval && chmod +x /sources/paval && echo '' | pdflatex --shell-escape Memoria.tex && rm paval Memoria-* Memoria.gnuploterrors *.aux *.log && make realclean"

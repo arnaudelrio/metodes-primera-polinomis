@@ -3,7 +3,6 @@
 \usepackage{datetime}
 \usepackage[most]{tcolorbox}
 \usepackage{gnuplottex}
-\usepackage{xcolor}
 
 \newcommand{\bash}[1]{\begin{tcolorbox}\texttt{\$ #1}\end{tcolorbox}}
 \newcommand{\fn}[2]{\begin{tcolorbox}[enhanced,colback=white,colframe=gray!50!white,attach boxed title to top center={yshift=-3mm,yshifttext=-1mm},title={Funció \texttt{#1}},boxed title style={size=small,colframe=black},colbacktitle=white,coltitle=black]\texttt{#2}\end{tcolorbox}}
@@ -88,6 +87,8 @@ La sortida per \texttt{stdout} tindrà el mateix format que l'entrada, en l'exem
 
 Les funcions \texttt{plleg} i \texttt{pescr} s'encarreguen de la lectura i escritura de polinomis per \texttt{stdin} i \texttt{stdout}, respectivament, i els seus arguments són un fitxer d'entrada o sortida (que pot ser \texttt{stdin} o \texttt{stdout}), un enter $n$ i un polinomi de grau $n$.
 
+\newpage
+
 \subsection{Utilitat \texttt{pcl}}
 La utilitat \texttt{pcl} es crida passant per \texttt{stdin} els valors de \texttt{alf} i \texttt{bet}, que són els coeficients dels polinomis a operar, i a continuació els polinomis a operar.
 \bash{./pcl alf bet}
@@ -99,20 +100,22 @@ Exemple d'ús: si volem calcular $0.1 \cdot p(x) + 0.2 \cdot q(x)$, amb $p(x) = 
 \subsection{Funció \texttt{pcl}}
 La funció \texttt{pcl} té el prototipus següent:
 
-% \fn{pcl}{void pcl (int m, double *p, int n, double *q, double alf, double bet, double r[]);}
+\fn{pcl}{void pcl (int m, double *p, int n, double *q, double alf, double bet, double r[]);}
 
 Aquesta funció ens permetrà calcular $r(x) = \alpha \cdot p(x) + \beta \cdot q(x)$.
 
 Els arguments d'aquesta funció són els següents:
 \begin{itemize}
     \item \texttt{m}: Grau del polinomi $p$
-    \item \texttt{p}: Vector de coeficiens del polinomi $p$ de grau $m$
+    \item \texttt{*p}: Vector de coeficiens del polinomi $p$ de grau $m$
     \item \texttt{n}: Grau del polinomi $q$
-    \item \texttt{q}: Vector de coeficiens del polinomi $q$ de grau $n$
+    \item \texttt{*q}: Vector de coeficiens del polinomi $q$ de grau $n$
     \item \texttt{alf}: Valor de $\alpha$
     \item \texttt{bet}: Valor de $\beta$
     \item \texttt{r}: Vector on escriure el resultat de la combinació lineal. La reserva de memòria està gestionada per la funció que crida a \texttt{pcl}.
 \end{itemize}
+
+\newpage
 
 \subsection{Utilitat \texttt{pmult}}
 La utilitat \texttt{pmult} simplement multiplica dos polinomis passats per \texttt{stdin}.
@@ -131,11 +134,13 @@ Aquesta funció ens permet multiplicar dos polinomis $p$ i $q$ i escriure el res
 Els arguments d'aquesta funció són els següents:
 \begin{itemize}
     \item \texttt{m}: Grau del polinomi $p$
-    \item \texttt{p}: Vector de coeficiens del polinomi $p$ de grau $m$
+    \item \texttt{*p}: Vector de coeficiens del polinomi $p$ de grau $m$
     \item \texttt{n}: Grau del polinomi $q$
-    \item \texttt{q}: Vector de coeficiens del polinomi $q$ de grau $n$
-    \item \texttt{r}: Vector on escriure el resultat de la multiplicació. La reserva de memòria està gestionada per la funció que crida a \texttt{pmult}.
+    \item \texttt{*q}: Vector de coeficiens del polinomi $q$ de grau $n$
+    \item \texttt{*r}: Vector on escriure el resultat de la multiplicació. La reserva de memòria està gestionada per la funció que crida a \texttt{pmult}.
 \end{itemize}
+
+\newpage
 
 \subsection{Utilitat \texttt{pder}}
 La utilitat \texttt{pder} només reb un polinomi per \texttt{stdin} i escriu la seva derivada per \texttt{stdout}.
@@ -154,9 +159,11 @@ Aquesta funció ens permet derivar un polinomi $p$ i escriure el resultat en un 
 Els arguments d'aquesta funció són els següents:
 \begin{itemize}
     \item \texttt{n}: Grau del polinomi $p$
-    \item \texttt{p}: Vector de coeficiens del polinomi $p$ de grau $n$
-    \item \texttt{dp}: Vector on escriure el resultat de la derivació. La reserva de memòria està gestionada per la funció que crida a \texttt{pder}.
+    \item \texttt{*p}: Vector de coeficiens del polinomi $p$ de grau $n$
+    \item \texttt{*dp}: Vector on escriure el resultat de la derivació. La reserva de memòria està gestionada per la funció que crida a \texttt{pder}.
 \end{itemize}
+
+\newpage
 
 \subsection{Utilitat \texttt{paval}}
 La utilitat \texttt{paval} evalua un polinomi passat per \texttt{stdin} en un conjunt de valors donats per \texttt{stdin} (sense necessitat de explicitar el nombre de valors).
@@ -176,7 +183,7 @@ Aquesta funció ens permet avaluar un polinomi $p$ en un punt $x$ donat. Per ava
 Els arguments d'aquesta funció són els següents:
 \begin{itemize}
     \item \texttt{n}: Grau del polinomi $p$
-    \item \texttt{p}: Vector de coeficiens del polinomi $p$ de grau $n$
+    \item \texttt{*p}: Vector de coeficiens del polinomi $p$ de grau $n$
     \item \texttt{x}: Punt en què avaluar el polinomi $p$
 \end{itemize}
 
