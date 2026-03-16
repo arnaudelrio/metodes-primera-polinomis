@@ -2,6 +2,9 @@
 \usepackage{amsmath}
 \usepackage{datetime}
 \usepackage[most]{tcolorbox}
+\usepackage{gnuplottex}
+\usepackage{xcolor}
+
 \newcommand{\bash}[1]{\begin{tcolorbox}\texttt{\$ #1}\end{tcolorbox}}
 \newcommand{\fn}[2]{\begin{tcolorbox}[enhanced,colback=white,colframe=gray!50!white,attach boxed title to top center={yshift=-3mm,yshifttext=-1mm},title={Funció \texttt{#1}},boxed title style={size=small,colframe=black},colbacktitle=white,coltitle=black]\texttt{#2}\end{tcolorbox}}
 
@@ -18,10 +21,14 @@ L'objectiu d'aquesta pràctica és poder treballar amb polinomis de grau elevat 
 Les utilitats que desenvoluparem en aquesta pràctica són:
 \begin{itemize}
     \item \texttt{pcl}: Calcular combinacions lineals de polinomis
-    \item \texttt{pmul}: Multiplicar polinomis
-    \item \texttt{pder}: Derivar polinomis
-    \item \texttt{paval}: Avaluar polinomis
+    \item \texttt{pmul}: Multiplicar dos polinomis entre ells
+    \item \texttt{pder}: Calcular la derivada de polinomis
+    \item \texttt{paval}: Avaluar polinomis en un conjunt de punts
 \end{itemize}
+
+A més a més de les utilitats, tenim una biblioteca de funcions útils en \texttt{pol.c} que ens ajuden amb certs aspectes com la lectura i escriptura de l'entrada i sortida dels programes.
+
+La utilitat per avaluar polinomis ens serà especialment útil per estudiar les altres utilitats que la utilitzem juntament amb el programa \texttt{gnuplot}, ja que ens servirà per graficar els punts de les funcions resultants.
 
 \newpage
 
@@ -92,7 +99,20 @@ Exemple d'ús: si volem calcular $0.1 \cdot p(x) + 0.2 \cdot q(x)$, amb $p(x) = 
 \subsection{Funció \texttt{pcl}}
 La funció \texttt{pcl} té el prototipus següent:
 
-\fn{pcl}{void pcl (int m, double *p, int n, double *q, double alf, double bet, double r[]);}
+% \fn{pcl}{void pcl (int m, double *p, int n, double *q, double alf, double bet, double r[]);}
+
+Aquesta funció ens permetrà calcular $r(x) = \alpha \cdot p(x) + \beta \cdot q(x)$.
+
+Els arguments d'aquesta funció són els següents:
+\begin{itemize}
+    \item \texttt{m}: Grau del polinomi $p$
+    \item \texttt{p}: Vector de coeficiens del polinomi $p$ de grau $m$
+    \item \texttt{n}: Grau del polinomi $q$
+    \item \texttt{q}: Vector de coeficiens del polinomi $q$ de grau $n$
+    \item \texttt{alf}: Valor de $\alpha$
+    \item \texttt{bet}: Valor de $\beta$
+    \item \texttt{r}: Vector on escriure el resultat de la combinació lineal. La reserva de memòria està gestionada per la funció que crida a \texttt{pcl}.
+\end{itemize}
 
 \subsection{Utilitat \texttt{pmult}}
 La utilitat \texttt{pmult} simplement multiplica dos polinomis passats per \texttt{stdin}.
@@ -102,6 +122,20 @@ Per exemple, per multiplicar els polinomis $p(x) = -1 + x$ i $q(x) = -2 + x$ amb
 \bash{echo 1 -1 1 1 -2 1 | ./pmult\\2 2 -3 1}
 
 \subsection{Funció \texttt{pmult}}
+La funció \texttt{pmult} té el prototipus següent:
+
+\fn{pmult}{void pmul (int m, double *p, int n, double *q, double *r);}
+
+Aquesta funció ens permet multiplicar dos polinomis $p$ i $q$ i escriure el resultat en un vector $r$ donat.
+
+Els arguments d'aquesta funció són els següents:
+\begin{itemize}
+    \item \texttt{m}: Grau del polinomi $p$
+    \item \texttt{p}: Vector de coeficiens del polinomi $p$ de grau $m$
+    \item \texttt{n}: Grau del polinomi $q$
+    \item \texttt{q}: Vector de coeficiens del polinomi $q$ de grau $n$
+    \item \texttt{r}: Vector on escriure el resultat de la multiplicació. La reserva de memòria està gestionada per la funció que crida a \texttt{pmult}.
+\end{itemize}
 
 \subsection{Utilitat \texttt{pder}}
 La utilitat \texttt{pder} només reb un polinomi per \texttt{stdin} i escriu la seva derivada per \texttt{stdout}.
@@ -111,6 +145,18 @@ Per exemple, per derivar el polinomi $p(x) = 1 - 5x + 3x^2$ amb resultat $p'(x) 
 \bash{echo 1 -5 3 | ./pder\\-5 6}
 
 \subsection{Funció \texttt{pder}}
+La funció \texttt{pder} té el prototipus següent:
+
+\fn{pder}{void pder (int n, double *p, double *dp);}
+
+Aquesta funció ens permet derivar un polinomi $p$ i escriure el resultat en un vector $dp$ donat.
+
+Els arguments d'aquesta funció són els següents:
+\begin{itemize}
+    \item \texttt{n}: Grau del polinomi $p$
+    \item \texttt{p}: Vector de coeficiens del polinomi $p$ de grau $n$
+    \item \texttt{dp}: Vector on escriure el resultat de la derivació. La reserva de memòria està gestionada per la funció que crida a \texttt{pder}.
+\end{itemize}
 
 \subsection{Utilitat \texttt{paval}}
 La utilitat \texttt{paval} evalua un polinomi passat per \texttt{stdin} en un conjunt de valors donats per \texttt{stdin} (sense necessitat de explicitar el nombre de valors).
@@ -121,15 +167,63 @@ Per exemple, per avaluar el polinomi $p(x) = -1 + x + x^2$ en els punts $x = 0.1
 \bash{echo 2 -1 1 1 0.1 0.2 0.3 | ./paval\\0.1 -0.89\\0.2 -0.76\\0.3 -0.61}
 
 \subsection{Funció \texttt{paval}}
+La funció \texttt{paval} té el prototipus següent:
+
+\fn{paval}{double paval (int n, double *p, double x);}
+
+Aquesta funció ens permet avaluar un polinomi $p$ en un punt $x$ donat. Per avaluar un conjunt de punts (com en la utilitat corresponent) $x_1, x_2, \ldots, x_m$, podem cridar a \texttt{paval} repetidament.
+
+Els arguments d'aquesta funció són els següents:
+\begin{itemize}
+    \item \texttt{n}: Grau del polinomi $p$
+    \item \texttt{p}: Vector de coeficiens del polinomi $p$ de grau $n$
+    \item \texttt{x}: Punt en què avaluar el polinomi $p$
+\end{itemize}
 
 \newpage
 
 \section{Validació del software}
-Podem comprovar que
+Podem comprovar els exemples que hem donat en aquesta memòria, que són prou senzills de calcular de cap, sembla que el programa és correcte.
+
+A més a més, tenim els fitxers \texttt{p.txt} i \texttt{q.txt} que contenen dos polinomis de graus $n = 50$ i $m = 55$, respectivament.
+
+Aquests polinomis en combinació lineal amb $2.37 \cdot p(x) - 1.71 \cdot q(x)$ haurien de donar el polinomi del fitxer \texttt{r1.txt}.
+
+Per altre banda, aquests mateixos polinomis multiplicats donen el polinomi que llegim en el fitxer \texttt{r2.txt}.
+
+Finalment, en \texttt{r3.txt} tenim anotat la derivada del polinomi \texttt{p.txt}.
+
+Per comprovar que la utilitat per avaluar polinomis funciona correctament, tenim en el fixter \texttt{abc.txt} 361 punts equiespaiats entre $[-0.9, 0.9]$, que avaluats a $p(x)q(x)$ donen el polinomi del fitxer \texttt{punts.txt}.
+
+Amb aquests exemples podem tornar a comprovar que les implementacions de les diferents utilitats funcionen correctament.
 
 \newpage
 
 \section{Resultats}
+Observem que, tot i que són polinomis considerablement grans per operar amb ells a mà, l'algorisme en C és àgil en les operacions, ja que únicament treballem amb vectors de coeficients i operacions elementals.
+
+A través de la utilitat \texttt{paval}, podem gràficar els polinomis $p(x)$ i $q(x)$ i veure la seva evolució en funció de $x$.
+
 \subsection{gnuplot}
+El programa \texttt{gnuplot} és una eina de graficació que permet dibuixar gràfics a partir de fitxers de dades.
+
+Per exemple, podem utilitzar \texttt{gnuplot} per representar els punts que hem trobat en l'exemple d'avaluar \texttt{paval}. Recordem que era el polinomi $f(x) = x^2 + x - 1$ en els punts $x \in {0.1, 0.2, 0.3}$. El gràfic el generarem amb més punts, concretament $x \in [0.1, 0.3]$ amb pas $0.1$. Aleshores, obtindrem:
+\begin{figure}[h]
+\centering
+\begin{gnuplot}[terminal=epslatex, terminaloptions={color dashed}]
+set size ratio -1
+plot "< ( echo '2 2 -3 1' ; seq 0 .01 3 ) | ./paval" with lines title "$f(x) = x^2 + x - 1$"
+\end{gnuplot}
+\caption{}
+\end{figure}
+
+En aquest cas, el fitxer \texttt{punts.txt} conté els punts que volem representar.
+\begin{figure}[h]
+\centering
+\begin{gnuplot}[terminal=pdf]
+plot 'punts.txt' with lines title "punts.txt"
+\end{gnuplot}
+\caption{}
+\end{figure}
 
 \end{document}

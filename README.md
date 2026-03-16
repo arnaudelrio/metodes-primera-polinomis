@@ -45,7 +45,7 @@ La biblioteca ha d'incloure les següents funcions:
 1. Escriptura i validació de la biblioteca.
 2. Escriptura i validació de les utilitats.
 3. **Proves de validació:**
-  * **Combinació lineal:** `cat p.txt q.txt | ./pcl 2.37 -1.71`.
+  * **Combinació lineal:** `cat p.txt q.txt | ./pcl 2.37 -1.71 > r1.txt`.
   * **Producte:** `cat p.txt q.txt | ./pmul > r2.txt`.
   * **Derivada:** `./pder < p.txt > r3.txt`.
   * **Gràfica:** Avaluar $p(x)q(x)$ en l'interval $[-0.9, 0.9]$ i representar-ho amb `gnuplot`.
