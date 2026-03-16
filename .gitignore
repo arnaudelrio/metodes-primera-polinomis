@@ -3,6 +3,7 @@
 !*.*
 *.o
 */target
-!*Makefile
+!Makefile
 *.aux
 *.log
+!Dockerfile
