@@ -11,8 +11,8 @@ int main (int argc, char *argv[]) {
         return -2;
     }
 
-    m = n == 0 ? 1 : n-1;
-    r=malloc(m*sizeof(double));
+    m = n == 0 ? 0 : n-1;
+    r=malloc((m+1)*sizeof(double));
     if (r==NULL) {
         fprintf(stderr, "Error reservant memòria!\n");
         free(p);

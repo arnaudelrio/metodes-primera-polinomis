@@ -214,12 +214,12 @@ A través de la utilitat \texttt{paval}, podem gràficar els polinomis $p(x)$ i 
 \subsection{gnuplot}
 El programa \texttt{gnuplot} és una eina de graficació que permet dibuixar gràfics a partir de fitxers de dades.
 
-Per exemple, podem utilitzar \texttt{gnuplot} per representar els punts que hem trobat en l'exemple d'avaluar \texttt{paval}. Recordem que era el polinomi $f(x) = x^2 + x - 1$ en els punts $x \in {0.1, 0.2, 0.3}$. El gràfic el generarem amb més punts, concretament $x \in [0.1, 0.3]$ amb pas $0.1$. Aleshores, obtindrem:
+Per exemple, podem utilitzar \texttt{gnuplot} per representar els punts que obtenim en avaluar un polinomi amb \texttt{paval}. Prenem per exemple el polinomi $f(x) = x^2 - 3x + 2$ en els punts $x \in [0.1, 0.3]$ amb pas $0.1$. Aleshores, obtindrem:
 \begin{figure}[h]
 \centering
 \begin{gnuplot}[terminal=epslatex, terminaloptions={color dashed}]
 set size ratio -1
-plot "< ( echo '2 2 -3 1' ; seq 0 .01 3 ) | ./paval" with lines title "$f(x) = x^2 + x - 1$"
+plot "< ( echo '2 2 -3 1' ; seq 0 .01 3 ) | ./paval" with lines title "$f(x) = x^2 - 3x + 2$"
 \end{gnuplot}
 \caption{}
 \end{figure}

@@ -71,20 +71,19 @@ void pmul (int m, double *p, int n, double *q, double *r) {
  * per a n coeficients.
  */
 void pder (int n, double *p, double *dp) {
-    int i;
     dp[0] = 0;
-    for (i=1;i<=n;i++) dp[i-1] = i*p[i];
+    for (int i = 1; i <= n; i++)
+        dp[i-1] = i*p[i];
 }
 
 /*
  * Avaluar un polinomi.
  */
 double paval (int n, double *p, double x) {
-    int i;
     double y;
     y = 0;
-    for (i = 0; i < n; i++) {
-        y = y*x + p[i];
+    for (int i = n; 0 <= i; i--) {
+        y = p[i] + y*x;
     }
     return y;
 }
