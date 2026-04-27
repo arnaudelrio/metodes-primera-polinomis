@@ -1,0 +1,1 @@
+echo 3 -7 0 1 1 2 9 -6 1 | ./pmul_m > ex2/ex2a.txt

@@ -1,0 +1,1 @@
+echo 2 1 1 .1 0.7 0.8 0.9 | ./paval_s 0.5 > ex3/ex3a.txt
